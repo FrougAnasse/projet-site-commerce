@@ -122,6 +122,11 @@ function getSizeProductSize($id){
     <script src="https://kit.fontawesome.com/18a82933ab.js" crossorigin="anonymous"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
+    <style>
+        .hidden{
+            display:none;
+        }
+    </style>
 
 </head>
     <body>    
@@ -157,6 +162,7 @@ function getSizeProductSize($id){
                 <h1>Accueil / <?php echo $nameCategory.' / '.$produit[2]; ?></h1>
 
                 <button id="suppress-product" style="width:150px;min-height:75px;color:black;background-color:red">SUPPRESSION DE L'ARTICLE</button>
+               
                 <div class="products-global">
                     <div class="image-products">
                         <div class="secondary-image-products">
@@ -170,10 +176,13 @@ function getSizeProductSize($id){
                     </div>
                     <div class="name-price-products">
                         <div class="name-products"><?php echo $produit[2]; ?></div>
-						<div class="admin-modify">
+						
+                        <div class="admin-modify">
+                             <label for="change-name">Change name : </label>
 							<input  type="text" id="change-name">
 							<button id="change-name-product">
 						</div>
+                        
                         <div class="color-products">
                             <div class="color-actually"><strong>Couleur</strong> :  Kaki</div>
                             <div class="list-color-product">
@@ -184,15 +193,37 @@ function getSizeProductSize($id){
                                    
                                     foreach ($colors as $color):
                                 ?>
-                                         <div class="color-product" style="background-color:<?php echo $color; ?>"></div>
+                                         <div class="color-product" data-color=<?php echo $color; ?> style="background-color:<?php echo $color; ?>"></div>
                                 <?php  endforeach; ?> 
+
+                                <script>
+                                    $(document).ready(function() {
+
+                                        $('.color-product').on('click',function(e){  
+                                            let size = $('#select-size').val();
+                                            let color = e.target.getAttribute('data-color');
+                                        
+                                            showGoodStock(color,size)
+                                        })
+                                    });
+
+
+                                    function showGoodStock(color,size){
+                                        $('.stock-product-show').addClass("hidden")
+
+                                        $('#'+color+'-'+size).removeClass('hidden');
+                                    }
+
+                                    
+
+                                </script>
                                
                             </div>
                         </div>
                         
                         <div class="size-product">
                             <p>Taille Disponible : </p>
-                            <select name="size" class="div-size">
+                            <select id="select-size" name="size" class="div-size">
                                 <?php foreach($sizes as $size ): ?>
                                     <option value="<?php echo $size ?>"><?php echo $size ?></option>
                                 <?php endforeach; ?>
@@ -208,7 +239,6 @@ function getSizeProductSize($id){
                                 $colorSize='';
                                 $colorStock='';
 
-
                                 foreach($StockByColorSize as $data ): 
                                         if($it==0):
                                             $colorProduct=$data;
@@ -220,11 +250,9 @@ function getSizeProductSize($id){
 
                                         $it++;
                                     ?>
-                                <?php endforeach; 
-
-                                ?>
+                                <?php endforeach; ?>
                                 
-                                <p class="stock-producthidden" id="<?php echo $colorProduct.'-'.$colorSize?>">Stock pour <?php echo $colorProduct.' de taille '.$colorSize?>: <?php echo $colorStock ?> unités restante</option>
+                                <p class="stock-product-show hidden" id="<?php echo $colorProduct.'-'.$colorSize?>"><?php echo $colorStock ?> unités restante</option>
                                   
                             <?php endforeach; ?>
                         </div>
@@ -234,6 +262,7 @@ function getSizeProductSize($id){
                             <?php echo $produit[4]; ?> €
 
                             <div class="admin-modify">
+                                <label for="change-price">Change price : </label>
 						    	<input  type="text" id="change-price">
 							    <button id="change-price-product">
 						    </div>
@@ -250,6 +279,7 @@ function getSizeProductSize($id){
                         <?php echo $produit[3]; ?>
                         
                         <div class="admin-modify">
+                            <label for="change-desc">Change Desc : </label>
 					    	<input  type="text" id="change-desc">
 						    <button id="change-desc-product">
 						</div>
